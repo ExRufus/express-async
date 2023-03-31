@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/header.ejs', page) -%>
+</head>
+
+<body>
+    <%- include('partials/navbar') -%>
+
+    <div class="container">
+        <div class="row">
+            <!-- form registration -->
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <form id="form-registration" class="mt-5">
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label">Full Name</label>
+                        <input type="text" name="fullname" class="form-control" id="fullname" placeholder="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" id="email" placeholder="email@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPassword" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputpasswordconfirmation" class="form-label">Password Confirmation</label>
+                        <input type="password" name="passwordConfirmation" class="form-control" id="inputpasswordconfirmation" placeholder="Password Confirmation">
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+
+        <div class="row md-5">
+            <div class="col-md-12">
+                <%- include('partials/footer.ejs') -%>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+ 
+<script>
+  document.getElementById('form-registration').addEventListener('submit', function (event) {
+  event.preventDefault();
+  let fullname = event.target.elements.fullname.value;
+  let email = event.target.elements.email.value;
+  let password = event.target.elements.inputPassword.value;
+  let inputpasswordconfirmation = event.target.elements.inputpasswordconfirmation.value;
+
+  if (password === inputpasswordconfirmation) {
+    let data = {
+      fullname: fullname,
+      email: email,
+      password: password
+    };
+
+    fetch('/users/v2/registration', {
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      if (data.code === 1) {
+        swal.fire({
+          icon: "success",
+          text: data.message,
+          confirmButtonText: 'ok',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.reload();
+          }
+        });
+      } else {
+        swal.fire({
+          icon: "error",
+          text: data.message
+        });
+      }
+    })
+    .catch(err => {
+      alert(err.message);
+      window.location.reload();
+    });
+  } else {
+    swal.fire({
+      icon: "error",
+      text: "password tidak sesuai"
+    });
+  }
+});
+</script>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/header.ejs', page) -%>
+</head>
+
+<body>
+        <%- include('partials/navbar') -%>
+ 
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>
+                    <%= page.title %>
+                </h1>
+                <p>
+                    <%= page.subTitle %>
+                </p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <% articles.forEach((data) => { %>
+            <div class="col-md-3">
+                <% if(data.publish) { %>
+                    <%- include('component/article', {article: data}) -%>
+                <% } %>
+            </div>
+        <% }) %>
+        </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <%- include('partials/footer.ejs') -%>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
